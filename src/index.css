@@ -1,0 +1,29 @@
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Poppins:wght@300;400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 36 60% 96%;
+    --foreground: 24 60% 12%;
+    --primary: 24 68% 14%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 33 55% 46%;
+    --card: 0 0% 100%;
+    --border: 33 30% 82%;
+    --muted: 36 40% 90%;
+    
+    --status-good: 150 46% 33%;
+    --status-good-bg: 145 40% 92%;
+    --status-low: 36 85% 38%;
+    --status-low-bg: 40 90% 94%;
+    --status-critical: 4 63% 46%;
+    --status-critical-bg: 4 80% 95%;
+  }
+
+  body {
+    @apply bg-[hsl(var(--background))] text-[hsl(var(--foreground))] font-sans antialiased;
+  }
+}
