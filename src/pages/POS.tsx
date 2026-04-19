@@ -7,7 +7,7 @@ import { cn } from '../lib/utils';
 import { QuantityStepper } from '../components/QuantityStepper';
 
 export function POS() {
-  const { menuItems, confirmSale, settings } = useAppContext();
+  const { menuItems, confirmSale } = useAppContext();
   const [activeCategory, setActiveCategory] = useState('Chai');
   const [cart, setCart] = useState<BillItem[]>([]);
   const total = cart.reduce((s, i) => s + i.subtotal, 0);

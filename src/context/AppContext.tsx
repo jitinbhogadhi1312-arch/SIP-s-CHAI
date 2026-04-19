@@ -119,7 +119,7 @@ interface AppContextType extends AppState {
   login: (pin: string) => boolean;
   logout: () => void;
   updateStockQty: (id: string, delta: number, note?: string) => void;
-  confirmSale: (items: BillItem[], discount: number, paymentMode: Bill['paymentMode']) => Bill | null;
+  confirmSale: (items: BillItem[]) => Bill | null;
   updateSettings: (settings: Partial<AppSettings>) => void;
   toggleShift: (active: boolean) => void;
   menuItems: typeof seedMenuItems;

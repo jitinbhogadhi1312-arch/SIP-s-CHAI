@@ -13,7 +13,6 @@ export function Dashboard() {
   const todaysBills = bills.filter(b => new Date(b.createdAt).toDateString() === todayStr);
   
   const todayRevenue = todaysBills.reduce((sum, b) => sum + b.total, 0);
-  const avgBillValue = todaysBills.length > 0 ? (todayRevenue / todaysBills.length) : 0;
   
   // Additional Revenue Calculations
   const startOfWeek = new Date();
