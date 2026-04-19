@@ -73,7 +73,7 @@ A curated "Chai & Coffee" theme featuring deep espresso hues (#241008) and warm 
 
 ## 👤 Credits
 
-Developed for **SIP's CHAI** - Managed by **Ajay Bhargav**.
+Developed for **SIP's CHAI** - Managed by **JITIN BHOGADHI**.
 
 ---
 *© 2026 SIP's CHAI. All rights reserved.*

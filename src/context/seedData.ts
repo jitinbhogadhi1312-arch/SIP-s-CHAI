@@ -2,7 +2,7 @@ import type { StockItem, AppSettings } from '../types';
 
 export const initialSettings: AppSettings = {
   cafeName: "SIP's CHAI",
-  ownerName: "Owner",
+  ownerName: "JITIN BHOGADHI",
   address: "1234 Chai Street",
   phone: "9876543210",
   ownerPin: "1234",
