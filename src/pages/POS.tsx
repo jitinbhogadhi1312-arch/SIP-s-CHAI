@@ -50,16 +50,19 @@ export function POS() {
     });
   };
 
+  const [showMobileOrders, setShowMobileOrders] = useState(false);
+
   const handleQuickPay = () => {
     if (cart.length === 0) return;
     try {
       const bill = confirmSale(cart);
       if (bill) {
         toast.success(`Success! Bill ${bill.billNumber}`, {
-          description: `₹${bill.total.toFixed(2)}`,
+          description: `₹${bill.total.toFixed(0)}`,
           duration: 2000,
         });
         setCart([]);
+        setShowMobileOrders(false);
       }
     } catch (e: any) {
       toast.error(e.message);
@@ -67,7 +70,7 @@ export function POS() {
   };
 
   return (
-    <div className="h-[calc(100vh-2rem)] md:h-[calc(100vh-4rem)] flex flex-col md:grid md:grid-cols-12 gap-4">
+    <div className="h-[calc(100vh-8rem)] md:h-[calc(100vh-4rem)] flex flex-col md:grid md:grid-cols-12 gap-4 relative overflow-hidden">
 
       {/* Category Panel */}
       <div className="md:col-span-2 overflow-x-auto md:overflow-y-auto no-scrollbar border-b md:border-b-0 md:border-r border-border pb-2 md:pb-0 md:pr-2 flex flex-row md:flex-col gap-2 shrink-0">
@@ -88,7 +91,7 @@ export function POS() {
       </div>
 
       {/* Items Grid */}
-      <div className="md:col-span-6 overflow-y-auto pr-2 space-y-3 pb-32 md:pb-0">
+      <div className="md:col-span-6 overflow-y-auto pr-2 space-y-3 pb-24 md:pb-0">
         <h2 className="font-semibold text-lg sticky top-0 bg-background pt-1 pb-3 z-10">{activeCategory}</h2>
         <div className="grid grid-cols-2 lg:grid-cols-3 gap-3">
           {currentItems.map(item => {
@@ -99,11 +102,13 @@ export function POS() {
                 onClick={() => addToCart(item)}
                 className="bg-card border border-border rounded-sm p-4 text-left shadow-sm hover:border-secondary/50 hover:shadow-md transition-all active:scale-95 relative flex flex-col justify-between min-h-[100px]"
               >
-                <span className="font-medium text-sm leading-tight">{item.name}</span>
-                <span className="font-mono font-semibold text-primary mt-2">₹{item.price}</span>
+                <div className="flex flex-col gap-1">
+                  <span className="font-medium text-[13px] leading-tight line-clamp-2">{item.name}</span>
+                  <span className="font-mono font-bold text-primary text-sm">₹{item.price}</span>
+                </div>
 
                 {inCart && (
-                  <div className="absolute top-2 right-2 bg-secondary text-white text-[10px] font-bold w-5 h-5 rounded-full flex items-center justify-center">
+                  <div className="absolute top-2 right-2 bg-secondary text-white text-[10px] font-bold w-5 h-5 rounded-full flex items-center justify-center animate-in zoom-in-50 duration-200">
                     {inCart.quantity}
                   </div>
                 )}
@@ -113,17 +118,37 @@ export function POS() {
         </div>
       </div>
 
+      {/* Cart Overlay for Mobile */}
+      {showMobileOrders && (
+        <div 
+          className="md:hidden fixed inset-0 bg-black/40 z-[60] animate-in fade-in" 
+          onClick={() => setShowMobileOrders(false)}
+        />
+      )}
+
       {/* Cart Panel */}
-      <div className="md:col-span-4 bg-card border border-border rounded-sm shadow-sm flex flex-col h-full overflow-hidden fixed inset-x-0 bottom-0 md:relative md:inset-auto z-50 md:z-auto max-h-[60vh] md:max-h-full">
+      <div className={cn(
+        "md:col-span-4 bg-card border border-border rounded-t-xl md:rounded-sm shadow-2xl md:shadow-sm flex flex-col h-full overflow-hidden transition-all duration-300 z-[70] md:z-auto",
+        "fixed inset-x-0 bottom-0 md:relative md:inset-auto",
+        showMobileOrders ? "h-[70vh] translate-y-0" : "h-0 md:h-full translate-y-full md:translate-y-0"
+      )}>
         <div className="p-4 border-b border-border bg-muted/20 flex justify-between items-center shrink-0">
-          <h2 className="font-semibold flex items-center gap-2">
-            <span className="bg-primary text-primary-foreground w-6 h-6 rounded-full flex items-center justify-center text-xs">
-              {cart.reduce((s, i) => s + i.quantity, 0)}
-            </span>
-            Order
-          </h2>
+          <div className="flex items-center gap-2">
+            <button 
+              onClick={() => setShowMobileOrders(false)}
+              className="md:hidden text-muted-foreground mr-2"
+            >
+              <Trash2 size={18} className="rotate-45" /> 
+            </button>
+            <h2 className="font-semibold flex items-center gap-2">
+              <span className="bg-primary text-primary-foreground w-6 h-6 rounded-full flex items-center justify-center text-xs">
+                {cart.reduce((s, i) => s + i.quantity, 0)}
+              </span>
+              Current Order
+            </h2>
+          </div>
           <button
-            onClick={() => { setCart([]); }}
+            onClick={() => { setCart([]); setShowMobileOrders(false); }}
             className="text-xs text-muted-foreground hover:text-red-500 flex items-center gap-1 transition-colors"
           >
             <Trash2 size={14} /> Clear
@@ -141,7 +166,7 @@ export function POS() {
               <div key={idx} className="flex flex-col gap-2 pb-4 border-b border-border/50 last:border-0 last:pb-0">
                 <div className="flex justify-between items-start">
                   <span className="font-medium text-sm pr-2">{item.itemName}</span>
-                  <span className="font-mono font-medium text-sm whitespace-nowrap">₹{item.subtotal.toFixed(2)}</span>
+                  <span className="font-mono font-medium text-sm whitespace-nowrap">₹{item.subtotal.toFixed(0)}</span>
                 </div>
                 <div className="flex justify-between items-center text-xs text-muted-foreground">
                   <span className="font-mono">₹{item.unitPrice} each</span>
@@ -160,7 +185,7 @@ export function POS() {
         <div className="border-t border-border bg-muted/20 p-4 space-y-3 shrink-0">
           <div className="flex justify-between text-sm">
             <span className="font-bold text-lg">Total</span>
-            <span className="font-mono font-bold text-2xl text-primary">₹{total.toFixed(2)}</span>
+            <span className="font-mono font-bold text-2xl text-primary">₹{total.toFixed(0)}</span>
           </div>
 
           <div className="mt-2">
@@ -175,6 +200,24 @@ export function POS() {
           </div>
         </div>
       </div>
+
+      {/* Mobile Bar */}
+      {!showMobileOrders && cart.length > 0 && (
+        <button 
+          onClick={() => setShowMobileOrders(true)}
+          className="md:hidden fixed bottom-20 left-4 right-4 bg-secondary text-white p-4 rounded-xl flex justify-between items-center shadow-xl animate-in slide-in-from-bottom-10 z-[55]"
+        >
+          <div className="flex items-center gap-3">
+            <div className="bg-white/20 px-2 py-1 rounded-md text-xs font-bold">
+              {cart.reduce((s, i) => s + i.quantity, 0)} Items
+            </div>
+            <span className="font-bold text-sm">View Order</span>
+          </div>
+          <span className="font-mono font-bold text-lg">₹{total.toFixed(0)}</span>
+        </button>
+      )}
+    </div>
+  );
 
       {/* Mobile Sticky Cart (Optional implementation detail, ignoring full complex mobile cart for brevity, focusing on the UI defined) */}
     </div>
